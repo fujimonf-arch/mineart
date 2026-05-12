@@ -20,21 +20,21 @@ function drawBoard(puzzle) {
 
   game.innerHTML = "";
 
-  for (let y = 0; y < puzzle.height; y++) {
+  for (let y = 0; y < puzzle.size_y; y++) {
 
     const row = document.createElement("div");
 
     row.className = "row";
 
-    for (let x = 0; x < puzzle.width; x++) {
+    for (let x = 0; x < puzzle.size_x; x++) {
 
       const cell = document.createElement("div");
 
       cell.className = "cell";
 
-      if (puzzle.board[y][x] === 1) {
+      if (puzzle.solution[y][x] === 1) {
 
-        cell.style.background = "white";
+        cell.style.background = "black";
 
       }
 
