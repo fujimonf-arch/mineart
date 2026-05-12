@@ -4,6 +4,8 @@ async function loadPuzzle() {
 
   const puzzle = await res.json();
 
+  console.log(puzzle);
+
   drawBoard(puzzle);
 
 }
