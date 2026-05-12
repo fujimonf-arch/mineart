@@ -1,5 +1,5 @@
 body {
-  background: #222;
+  background: #111;
   color: white;
   font-family: sans-serif;
 }
@@ -13,8 +13,8 @@ body {
 }
 
 .cell {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border: 1px solid #555;
   background: black;
 }
