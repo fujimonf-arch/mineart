@@ -1,1 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+  <meta charset="UTF-8">
+  <title>MineArt Puzzle Editor</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>MineArt Puzzle Editor</h1>
+
+<div class="toolbar">
+
+<button id="modePlay">Play Mode</button>
+<button id="modeEdit">Edit Mode</button>
+
+<button id="undoBtn">Undo</button>
+<button id="redoBtn">Redo</button>
+
+<button id="saveBtn">Export JSON</button>
+<button id="checkBtn">Unique Check</button>
+
+<button id="toggleAnswer">Answer</button>
+
+</div>
+
+<div class="container">
+
+<div>
+<h2>Problem</h2>
+<div id="board"></div>
+</div>
+
+<div>
+<h2>Answer Reference</h2>
+<div id="answerBoard"></div>
+</div>
+
+</div>
+
+<script src="engine.js"></script>
+<script src="editor.js"></script>
+
+</body>
+</html>
