@@ -1,4 +1,4 @@
-fetch("puzzle.json")
+fetch("./puzzles/cat.json")
 .then(r=>r.json())
 .then(data=>{
 
