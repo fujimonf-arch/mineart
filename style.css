@@ -14,6 +14,14 @@ body{
   margin-bottom:16px;
 }
 
+.hint-complete{
+  color:#999;
+}
+
+.hint-error{
+  color:#d00;
+}
+
 .toolbar button{
   margin-right:8px;
   padding:6px 12px;
@@ -25,25 +33,6 @@ body{
 
 .cell{
   position:relative;
-}
-
-.hint{
-  position:absolute;
-
-  inset:0;
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-
-  font-size:12px;
-
-  font-weight:bold;
-
-  color:black;
-
-  pointer-events:none;
 }
 
 .container{
