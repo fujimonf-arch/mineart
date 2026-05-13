@@ -32,11 +32,21 @@ function drawBoard(puzzle) {
 
       cell.className = "cell";
 
-      if (puzzle.solution[y][x] === 1) {
+      // 左クリック
+      cell.addEventListener("click", () => {
 
-        cell.style.background = "black";
+        cell.classList.toggle("filled");
 
-      }
+      });
+
+      // 右クリック
+      cell.addEventListener("contextmenu", (e) => {
+
+        e.preventDefault();
+
+        cell.classList.toggle("x");
+
+      });
 
       row.appendChild(cell);
 
