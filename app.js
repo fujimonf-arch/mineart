@@ -36,6 +36,8 @@ function drawBoard(puzzle) {
 
   let touched = new Set();
 
+  const cells = [];
+
   function pushHistory() {
 
     undoStack.push(
@@ -70,6 +72,121 @@ function drawBoard(puzzle) {
 
       }
     }
+
+  }
+
+  function inside(x, y) {
+
+    return (
+      x >= 0 &&
+      x < W &&
+      y >= 0 &&
+      y < H
+    );
+
+  }
+
+  function getArea(cx, cy) {
+
+    const arr = [];
+
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+
+        const nx = cx + dx;
+        const ny = cy + dy;
+
+        if (inside(nx, ny)) {
+          arr.push([nx, ny]);
+        }
+
+      }
+    }
+
+    return arr;
+
+  }
+
+  function updateHintsAround(cx, cy) {
+
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+
+        const x = cx + dx;
+        const y = cy + dy;
+
+        if (!inside(x, y)) continue;
+
+        const cell = cells[y][x];
+
+        const hint = cell.querySelector(".hint");
+
+        if (!hint) continue;
+
+        hint.classList.remove("hint-complete");
+        hint.classList.remove("hint-error");
+
+        const target = Number(
+          hint.dataset.value
+        );
+
+        const area = getArea(x, y);
+
+        let black = 0;
+        let xcount = 0;
+
+        for (const [ax, ay] of area) {
+
+          const s = states[ay][ax];
+
+          if (s === 1) black++;
+
+          if (s === 2) xcount++;
+
+        }
+
+        // 周囲が全部確定
+        if (
+          black + xcount === area.length
+        ) {
+
+          if (black === target) {
+
+            hint.classList.add(
+              "hint-complete"
+            );
+
+          }
+
+        }
+
+        // 矛盾
+        if (
+          black > target ||
+          xcount > area.length - target
+        ) {
+
+          hint.classList.add(
+            "hint-error"
+          );
+
+        }
+
+      }
+    }
+
+  }
+
+  function updateAllHints() {
+
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+
+        updateHintsAround(x, y);
+
+      }
+    }
+
   }
 
   function resetBoard() {
@@ -80,9 +197,31 @@ function drawBoard(puzzle) {
 
     refreshBoard();
 
+    updateAllHints();
+
   }
 
-  const cells = [];
+  function checkComplete() {
+
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+
+        const answer =
+          puzzle.solution[y][x];
+
+        const player =
+          states[y][x] === 1 ? 1 : 0;
+
+        if (answer !== player) {
+          return;
+        }
+
+      }
+    }
+
+    alert("CLEAR!");
+
+  }
 
   for (let y = 0; y < H; y++) {
 
@@ -97,19 +236,25 @@ function drawBoard(puzzle) {
       const cell = document.createElement("div");
 
       cell.className = "cell";
+
       const key = `${y},${x}`;
 
-if (key in puzzle.hints) {
+      if (key in puzzle.hints) {
 
-  const hint = document.createElement("div");
+        const hint =
+          document.createElement("div");
 
-  hint.className = "hint";
+        hint.className = "hint";
 
-  hint.textContent = puzzle.hints[key];
+        hint.dataset.value =
+          puzzle.hints[key];
 
-  cell.appendChild(hint);
+        hint.textContent =
+          puzzle.hints[key];
 
-}
+        cell.appendChild(hint);
+
+      }
 
       cell.dataset.x = x;
       cell.dataset.y = y;
@@ -118,31 +263,41 @@ if (key in puzzle.hints) {
 
       row.appendChild(cell);
 
-      cell.addEventListener("mousedown", (e) => {
+      cell.addEventListener(
+        "mousedown",
+        (e) => {
 
-        e.preventDefault();
+          e.preventDefault();
 
-        touched.clear();
+          touched.clear();
 
-        mouseDown = true;
+          mouseDown = true;
 
-        dragMode = e.button === 0 ? "black" : "x";
+          dragMode =
+            e.button === 0
+              ? "black"
+              : "x";
 
-        dragSourceState = states[y][x];
+          dragSourceState =
+            states[y][x];
 
-        pushHistory();
+          pushHistory();
 
-        apply(cell);
-
-      });
-
-      cell.addEventListener("mouseenter", () => {
-
-        if (mouseDown) {
           apply(cell);
-        }
 
-      });
+        }
+      );
+
+      cell.addEventListener(
+        "mouseenter",
+        () => {
+
+          if (mouseDown) {
+            apply(cell);
+          }
+
+        }
+      );
 
     }
 
@@ -189,6 +344,10 @@ if (key in puzzle.hints) {
 
       }
 
+      else {
+        return;
+      }
+
     }
 
     // 右ドラッグ
@@ -214,19 +373,30 @@ if (key in puzzle.hints) {
 
       }
 
+      else {
+        return;
+      }
+
     }
 
     refreshBoard();
 
+    updateHintsAround(x, y);
+
+    checkComplete();
+
   }
 
-  document.addEventListener("mouseup", () => {
+  document.addEventListener(
+    "mouseup",
+    () => {
 
-    mouseDown = false;
+      mouseDown = false;
 
-    touched.clear();
+      touched.clear();
 
-  });
+    }
+  );
 
   document.addEventListener(
     "contextmenu",
@@ -247,6 +417,8 @@ if (key in puzzle.hints) {
 
     refreshBoard();
 
+    updateAllHints();
+
   };
 
   redoBtn.onclick = () => {
@@ -263,6 +435,8 @@ if (key in puzzle.hints) {
 
     refreshBoard();
 
+    updateAllHints();
+
   };
 
   resetBtn.onclick = () => {
@@ -272,6 +446,10 @@ if (key in puzzle.hints) {
     resetBoard();
 
   };
+
+  refreshBoard();
+
+  updateAllHints();
 
 }
 
