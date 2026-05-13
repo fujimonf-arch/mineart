@@ -97,6 +97,19 @@ function drawBoard(puzzle) {
       const cell = document.createElement("div");
 
       cell.className = "cell";
+      const key = `${y},${x}`;
+
+if (key in puzzle.hints) {
+
+  const hint = document.createElement("div");
+
+  hint.className = "hint";
+
+  hint.textContent = puzzle.hints[key];
+
+  cell.appendChild(hint);
+
+}
 
       cell.dataset.x = x;
       cell.dataset.y = y;
